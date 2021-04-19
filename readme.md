@@ -1,0 +1,1 @@
+La nostra idea consisteix en un joc d'una serp que va menjant pomes i es va fent més gran cada cop que menja es va fent més grani va més ràpid i serà més difícil, ja que al xocar contra una de les parets del mapa perdràs en el joc.
