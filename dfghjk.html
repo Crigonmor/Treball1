@@ -97,7 +97,7 @@ function loop() {
   // draw apple
   context.fillStyle = 'red';
   context.fillRect(apple.x, apple.y, grid-1, grid-1);
-
+-
   // draw snake one cell at a time
   context.fillStyle = 'green';
   snake.cells.forEach(function(cell, index) {
@@ -117,7 +117,7 @@ function loop() {
     // check collision with all cells after this one (modified bubble sort)
     for (var i = index + 1; i < snake.cells.length; i++) {
 
-      // snake occupies same space as a body part. reset game
+      // la serp ocupa el mateix espai que una part del cos. restableix el joc
       if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
         snake.x = 160;
         snake.y = 160;
@@ -133,36 +133,37 @@ function loop() {
   });
 }
 
-// listen to keyboard events to move the snake
-document.addEventListener('keydown', function(e) {
-  // prevent snake from backtracking on itself by checking that it's
-  // not already moving on the same axis (pressing left while moving
-  // left won't do anything, and pressing right while moving left
-  // shouldn't let you collide with your own body)
+// escoltar esdeveniments del teclat per moure la serp
 
-  // left arrow key
+document.addEventListener('keydown', function(e) {
+//  Eviteu que la serp retrocedeixi en si mateixa comprovant que sigui
+  // que no es mou pel mateix eix (prement cap a l’esquerra mentre es mou
+  // l'esquerra no farà res i prement la dreta mentre es mou a l'esquerra
+  // no us ha de deixar xocar amb el vostre propi cos)
+
+  // tecla de fletxa esquerra
   if (e.which === 37 && snake.dx === 0) {
     snake.dx = -grid;
     snake.dy = 0;
   }
-  // up arrow key
+  // tecla de fletxa cap amunt
   else if (e.which === 38 && snake.dy === 0) {
     snake.dy = -grid;
     snake.dx = 0;
   }
-  // right arrow key
+  // tecla de fletxa dreta
   else if (e.which === 39 && snake.dx === 0) {
     snake.dx = grid;
     snake.dy = 0;
   }
-  // down arrow key
+  // tecla de fletxa avall
   else if (e.which === 40 && snake.dy === 0) {
     snake.dy = grid;
     snake.dx = 0;
   }
 });
 
-// start the game
+// començar el joc
 requestAnimationFrame(loop);
 </script>
 </body>
