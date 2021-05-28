@@ -1,0 +1,402 @@
+<!DOCTYPE html>
+<html>
+<head>
+  <title></title>
+  <style>
+  html, body {
+    height: 100%;
+    margin: 0;
+  }
+
+  body {
+    background-image: url('serp.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+
+  }
+  canvas {
+    border: 1px solid white;
+    background-image: url('Pixel_art_grass_image.png');
+  }
+  /* cuadrat joc */
+  audio{
+    visibility:  hidden;
+    volume = 1.0;
+  }
+  #a{
+    display: flex;
+    position: absolute;
+    height: 400px;
+    width: 290px;
+    background-color: #ADC2D5;
+    margin:20px;
+    right: 70px;
+    top:-5px;
+    font-family:fantasy;
+    border:solid 5px;
+    font-size:30px;
+  }
+  #p1 {
+    color: #CCC9DC;
+    position: absolute;
+    /* left: 100px; */
+    top: 10px;
+    font-family: cursive;
+    font-size: x-large;
+  }
+
+  #p2 {
+    color: #CCC9DC;
+    position: absolute;
+    /* left: 100px; */
+    top: 30px;
+    font-family: cursive;
+    font-size: x-large;
+    margin-top: 35px;
+  }
+
+  #score {
+    color: yellow;
+  }
+
+  #high {
+    color: #E43F5A;
+  }
+  </style>
+</head>
+<body>
+  <audio id="audio" controls style="display:none">
+  <source src="comer.mp3" type="audio/mpeg"> Your browser does not support the audio element.
+</audio>
+<audio id="choque" controls style="display:none">
+<source src="jab-jab.mp3" type="audio/mpeg"> Your browser does not support the audio element.
+</audio>
+<audio id="tetris" controls style="display:none">
+<source src="t" type="audio/mpeg"> Your browser does not support the audio element.
+</audio>
+
+
+<canvas width="592" height="592" id="game"></canvas>
+<script>
+
+document.getElementById('tetris').play();
+var canvas = document.getElementById('game');
+var context = canvas.getContext('2d');
+var puntos = 0;
+
+var grid = 16;
+var count = 0;
+var score = 0;
+var max = 0;
+
+
+var snake = {
+  x: 160,
+  y: 160,
+
+  // velocitat de la serp. mou una longitud de quadrícula en cada fotograma en la direcció x o i
+
+  dx: grid,
+  dy: 0,
+
+  // realitza un seguiment de totes les quadrícules que ocupa el cos de la serp
+  cells: [],
+
+  // longitud de la serp. creix a l'menjar una poma en el nostre cas 2
+  maxCells: 2
+};
+var food = {
+  x: 320,
+  y: 320
+};
+
+// obtenir nombres enters aleatoris en un rang seleccionat
+
+function getRandomInt(min, max) {
+  return Math.floor(Math.random() * (max - min)) + min;
+}
+
+// game loop
+function loop() {
+  requestAnimationFrame(loop);
+
+  // // bucle de joc lent a 15 fps en lloc de 60 (60/15 = 4)
+  if (++count < 3) {
+    return;
+  }
+
+
+  count = 0;
+  context.clearRect(0,0,canvas.width,canvas.height);
+
+  // mou la serp per la seva velocitat
+  snake.x += snake.dx;
+  snake.y += snake.dy;
+
+
+     // si surt de la vora de la pantalla en posico horizontal es mor
+
+  if (snake.x < 0) {
+    snake.x = canvas.width - grid;
+    snake.x = 0;
+    snake.x = 320;
+    snake.y = 320;
+    snake.cells = [];
+    snake.maxCells = 2;
+    snake.dx = grid;
+    snake.dy = 0;
+    food.x = getRandomInt(0, 37) * grid;
+    food.y = getRandomInt(0, 37) * grid;
+
+    if (score > max) {
+      max = score;
+    }
+
+
+    score = 0;
+
+    document.getElementById('high').innerHTML = '&nbsp;' + max;
+
+
+      document.getElementById('choque').play();
+
+
+
+  }
+  else if (snake.x >= canvas.width) {
+    snake.x = 0;
+    snake.x = 320;
+    snake.y = 320;
+    snake.cells = [];
+    snake.maxCells = 2;
+    snake.dx = grid;
+    snake.dy = 0;
+    food.x = getRandomInt(0, 37) * grid;
+    food.y = getRandomInt(0, 37) * grid;
+
+document.getElementById('choque').play();
+
+    if (score > max) {
+      max = score;
+    }
+
+
+    score = 0;
+
+    document.getElementById('high').innerHTML = '&nbsp;' + max;
+
+
+
+
+
+
+  }
+
+  //  si surt la vora de la pantalla   en posico vertical de la pantalla mor
+  if (snake.y < 0) {
+    snake.y = canvas.height - grid;
+    snake.x = canvas.width - grid;
+    snake.x = 0;
+    snake.x = 320;
+    snake.y = 320;
+    snake.cells = [];
+    snake.maxCells = 2;
+    snake.dx = grid;
+    snake.dy = 0;
+    food.x = getRandomInt(0, 37) * grid;
+    food.y = getRandomInt(0, 37) * grid;
+      document.getElementById('choque').play() ;
+
+      if (score > max) {
+        max = score;
+      }
+
+
+      score = 0;
+
+      document.getElementById('high').innerHTML = '&nbsp;' + max;
+
+
+        document.getElementById('choque').play();
+
+  }
+  else if (snake.y >= canvas.height) {
+    snake.y = 0;
+    snake.x = canvas.width - grid;
+    snake.x = 0;
+    snake.x = 320;
+    snake.y = 320;
+    snake.cells = [];
+    snake.maxCells = 2;
+    snake.dx = grid;
+    snake.dy = 0;
+    food.x = getRandomInt(0, 37) * grid;
+    food.y = getRandomInt(0, 37) * grid;
+
+      document.getElementById('choque').play();
+
+      if (score > max) {
+        max = score;
+      }
+
+
+      score = 0;
+
+      document.getElementById('high').innerHTML = '&nbsp;' + max;
+
+
+        document.getElementById('choque').play();
+
+  }
+
+
+  // registre d'on ha estat la serp. el front de la matriu és sempre el cap
+  snake.cells.unshift({x: snake.x, y: snake.y});
+
+  // eliminar cèl·lules a mesura que ens allunyem d'elles
+
+  if (snake.cells.length > snake.maxCells) {
+    snake.cells.pop();
+  }
+
+  // dibuixar poma
+  context.fillStyle = 'red';
+  context.fillRect(food.x, food.y, grid -4, grid -4);
+
+  // dibuixa una serp una cel·la a la vegada
+  context.fillStyle = 'green';
+  snake.cells.forEach(function(cell, index) {
+
+    function drawScore() {
+        ctx.font = "16px Arial";
+        ctx.fillStyle = "#0095DD";
+
+    }
+
+
+
+    // dibuixar 1 px més petit que la quadrícula crea un efecte de quadrícula al cos de la serp perquè pugueu veure quant de temps té
+
+    context.fillRect(cell.x, cell.y, grid-1, grid-1);
+
+    // la serp va menjar poma
+    if (cell.x === food.x && cell.y === food.y) {
+      snake.maxCells++;
+      score += 1;
+      document.getElementById('score').innerHTML = '&nbsp;' + score;
+
+      document.getElementById('audio').play();
+
+      // el llenç té 16x37=592x592, és a dir, quadrícules de 37x37
+      food.x = getRandomInt(0, 37) * grid;
+      food.y = getRandomInt(0, 37) * grid;
+      puntos++
+
+      document.getElementById("a").innerHTML = "Els teus punts son:"+ puntos;
+    }
+
+    // diable col·lisió amb totes les cel·les després d'aquest (tipus de bombolla modificat)
+    for (var i = index + 1; i < snake.cells.length; i++) {
+
+      //si la serp es menja a ella mateixa es  . restableix el joc
+      if (cell.x === snake.cells[i].x && cell.y === snake.cells[i].y) {
+        if (score > max) {
+          max = score;
+        }
+        snake.x = 160;
+        snake.y = 160;
+        snake.cells = [];
+        snake.maxCells = 2;
+        snake.dx = grid;
+        snake.dy = 0;
+        score = 0;
+        food.x = getRandomInt(0, 25) * grid;
+        food.y = getRandomInt(0, 25) * grid;
+        document.getElementById('high').innerHTML = '&nbsp;' + max;
+      }
+    }
+  });
+}
+
+// escolta els esdeveniments del teclat per moure la serp
+
+document.addEventListener('keydown', function(e) {
+  
+
+
+
+
+  // tecla de fletxa esquerra
+  if (e.which === 65 && snake.dx === 0) {
+    snake.dx = -grid;
+    snake.dy = 0;
+
+  }
+  // tecla de fletxa cap amunt
+  else if (e.which === 87 && snake.dy === 0) {
+    snake.dy = -grid;
+    snake.dx = 0;
+  }
+  // tecla de fletxa dreta
+  else if (e.which === 68 && snake.dx === 0) {
+    snake.dx = grid;
+    snake.dy = 0;
+  }
+  // tecla de fletxa avall
+  else if (e.which === 83 && snake.dy === 0) {
+    snake.dy = grid;
+    snake.dx = 0;
+  }
+
+});
+
+
+
+// començar el joc
+requestAnimationFrame(loop);
+var audio = document.getElementById("tetris");
+ audio.volume = 0.5;
+
+function play(){
+  audio.play();
+}
+
+
+function pause(){
+  if (audio.paused){
+    audio.play();
+  }else{
+    audio.pause();
+  }
+}
+
+function stop(){
+  audio.pause();
+  audio.currentTime = 0;
+}
+
+function turnUpVolume(){
+  if (audio.volume<5.9){
+    audio.volume+=0.1;
+  }
+}
+
+function turnDownVolume(){
+  if (audio.volume>0.1){
+    audio.volume-=0.1;
+  }
+}
+
+
+</script>
+
+
+<p id="p1">Score:<span  id="score"></span></p>
+<p id="p2">High Score:<span id="high"></span></p>
+
+
+</body>
+</html>
